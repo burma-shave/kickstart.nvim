@@ -187,6 +187,18 @@ vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagn
 -- Allow easy window navigation out of a teminal buffer
 vim.keymap.set('t', '<C-w>', '<C-\\><C-n><C-w>', { desc = 'Exit terminal mode' })
 
+vim.api.nvim_create_autocmd('BufEnter', {
+  desc = 'Enter inset mode when entering a terminal buffer',
+  group = vim.api.nvim_create_augroup('terminal-auto-insert', {}),
+
+  callback = function()
+    local buff = vim.bo
+    if buff.buftype == 'terminal' then
+      vim.cmd 'startinsert'
+    end
+  end,
+})
+
 -- TIP: Disable arrow keys in normal mode
 -- vim.keymap.set('n', '<left>', '<cmd>echo "Use h to move!!"<CR>')
 -- vim.keymap.set('n', '<right>', '<cmd>echo "Use l to move!!"<CR>')
