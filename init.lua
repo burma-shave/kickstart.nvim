@@ -166,6 +166,9 @@ vim.o.scrolloff = 10
 -- See `:help 'confirm'`
 vim.o.confirm = true
 
+-- Dim background for inactive windows
+vim.api.nvim_set_hl(0, 'NormalNC', { bg = '#000000' })
+
 -- [[ Basic Keymaps ]]
 --  See `:help vim.keymap.set()`
 
