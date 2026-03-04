@@ -53,6 +53,7 @@ return {
       vim.api.nvim_create_autocmd('BufEnter', {
         pattern = '*.java',
         callback = function()
+          vim.o.tabstop = 2
           require('jdtls').start_or_attach(config)
         end,
       })

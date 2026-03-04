@@ -97,6 +97,10 @@ vim.g.have_nerd_font = true
 -- See `:help vim.o`
 -- NOTE: You can change these options as you wish!
 --  For more options, you can see `:help option-list`
+--
+vim.o.tabstop = 8 -- set tabs witdth to 4 spaces
+vim.o.shiftwidth = 0 -- use tabstop value for indents
+vim.o.expandtab = false -- do not inset spaces in place of tabs
 
 -- Make line numbers default
 vim.o.number = true
