@@ -3,6 +3,7 @@
 --
 -- See the kickstart.nvim README for more information
 return {
+  { 'prettier/vim-prettier' },
   {
     'sindrets/diffview.nvim',
   },
