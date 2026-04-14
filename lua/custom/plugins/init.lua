@@ -4,6 +4,7 @@
 -- See the kickstart.nvim README for more information
 return {
   { 'prettier/vim-prettier' },
+  { 'fenetikm/falcon' },
   {
     'sindrets/diffview.nvim',
   },
