@@ -102,6 +102,9 @@ vim.o.tabstop = 8 -- set tabs witdth to 4 spaces
 vim.o.shiftwidth = 0 -- use tabstop value for indents
 vim.o.expandtab = false -- do not inset spaces in place of tabs
 
+-- Softwrap on whole words
+vim.o.linebreak = true
+
 -- Make line numbers default
 vim.o.number = true
 -- You can also add relative line numbers, to help with jumping.
