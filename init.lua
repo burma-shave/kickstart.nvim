@@ -451,9 +451,11 @@ require('lazy').setup({
 
       -- See `:help telescope.builtin`
       local builtin = require 'telescope.builtin'
+      local picker = Snacks.picker
+      vim.keymap.set('n', '<leader>.', picker.smart, { desc = 'Smart search[.]' })
       vim.keymap.set('n', '<leader>sh', builtin.help_tags, { desc = '[S]earch [H]elp' })
-      vim.keymap.set('n', '<leader>sk', builtin.keymaps, { desc = '[S]earch [K]eymaps' })
-      vim.keymap.set('n', '<leader>sf', builtin.find_files, { desc = '[S]earch [F]iles' })
+      vim.keymap.set('n', '<leader>sk', picker.keymaps, { desc = '[S]earch [K]eymaps' })
+      vim.keymap.set('n', '<leader>sf', picker.files, { desc = '[S]earch [F]iles' })
       vim.keymap.set('n', '<leader>sF', function()
         builtin.find_files {
           no_ignore = true,
@@ -489,7 +491,7 @@ require('lazy').setup({
 
       -- Shortcut for searching your Neovim configuration files
       vim.keymap.set('n', '<leader>sn', function()
-        builtin.find_files { cwd = vim.fn.stdpath 'config' }
+        Snacks.picker.files { cwd = vim.fn.stdpath("config") }
       end, { desc = '[S]earch [N]eovim files' })
     end,
   },
