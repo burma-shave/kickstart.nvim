@@ -128,7 +128,6 @@ vim.pack.add {
   gh 'lewis6991/gitsigns.nvim',
   gh 'folke/which-key.nvim',
   gh 'nvim-mini/mini.nvim',
-  gh 'folke/snacks.nvim',
   -- v2 is in development on main; stay on 1.x releases.
   { src = gh 'saghen/blink.cmp', version = vim.version.range '1.*' },
   gh 'neovim/nvim-lspconfig',
@@ -188,7 +187,7 @@ require('mini.ai').setup { n_lines = 500 }
 -- - sr)'  - [S]urround [R]eplace [)] [']
 require('mini.surround').setup()
 
--- File type icons, used by mini.files, snacks and render-markdown.
+-- File type icons, used by mini.files, mini.pick and render-markdown.
 if vim.g.have_nerd_font then
   require('mini.icons').setup()
 end
@@ -208,40 +207,53 @@ vim.api.nvim_create_autocmd('User', {
 })
 vim.keymap.set('n', '<leader>e', MiniFiles.open, { desc = 'Open file [e]xplorer' })
 
--- [[ snacks.nvim ]]
-require('snacks').setup {
-  -- Also replaces vim.ui.select (e.g. code action menus).
-  picker = { enabled = true },
-  lazygit = {
-    configure = true,
-  },
-}
+-- [[ Pickers ]]
+-- mini.pick, with extra pickers from mini.extra. See `:help mini.pick`.
+require('mini.pick').setup()
+require('mini.extra').setup()
+-- Also use the picker for vim.ui.select (e.g. code action menus).
+vim.ui.select = MiniPick.ui_select
+-- Record visited files so <leader>. can rank them by frequency and recency.
+require('mini.visits').setup()
 
-vim.keymap.set('n', '<leader>gg', function()
-  Snacks.lazygit()
-end, { desc = 'Lazygit' })
-
--- See `:help snacks-picker-sources`
-local picker = Snacks.picker
-vim.keymap.set('n', '<leader>.', picker.smart, { desc = 'Smart search[.]' })
-vim.keymap.set('n', '<leader>sh', picker.help, { desc = '[S]earch [H]elp' })
-vim.keymap.set('n', '<leader>sk', picker.keymaps, { desc = '[S]earch [K]eymaps' })
-vim.keymap.set('n', '<leader>sf', picker.files, { desc = '[S]earch [F]iles' })
+local pick, extra = MiniPick.builtin, MiniExtra.pickers
+vim.keymap.set('n', '<leader>.', extra.visit_paths, { desc = 'Frequent/recent files[.]' })
+vim.keymap.set('n', '<leader>sh', pick.help, { desc = '[S]earch [H]elp' })
+vim.keymap.set('n', '<leader>sk', extra.keymaps, { desc = '[S]earch [K]eymaps' })
+vim.keymap.set('n', '<leader>sf', pick.files, { desc = '[S]earch [F]iles' })
 vim.keymap.set('n', '<leader>sF', function()
-  picker.files { ignored = true }
+  pick.cli({ command = { 'rg', '--files', '--no-ignore', '--color=never' } }, { source = { name = 'Files (including ignored)' } })
 end, { desc = '[S]earch All [F]iles' })
-vim.keymap.set('n', '<leader>si', picker.git_files, { desc = '[S]earch G[i]t files' })
-vim.keymap.set('n', '<leader>ss', picker.pickers, { desc = '[S]earch [S]elect picker' })
-vim.keymap.set('n', '<leader>sw', picker.grep_word, { desc = '[S]earch current [W]ord' })
-vim.keymap.set('n', '<leader>sg', picker.grep, { desc = '[S]earch by [G]rep' })
-vim.keymap.set('n', '<leader>sd', picker.diagnostics, { desc = '[S]earch [D]iagnostics' })
-vim.keymap.set('n', '<leader>sr', picker.resume, { desc = '[S]earch [R]esume' })
-vim.keymap.set('n', '<leader>s.', picker.recent, { desc = '[S]earch Recent Files ("." for repeat)' })
-vim.keymap.set('n', '<leader><leader>', picker.buffers, { desc = '[ ] Find existing buffers' })
-vim.keymap.set('n', '<leader>/', picker.lines, { desc = '[/] Fuzzily search in current buffer' })
-vim.keymap.set('n', '<leader>s/', picker.grep_buffers, { desc = '[S]earch [/] in Open Files' })
+vim.keymap.set('n', '<leader>si', extra.git_files, { desc = '[S]earch G[i]t files' })
+vim.keymap.set('n', '<leader>ss', function()
+  local names = vim.tbl_keys(MiniPick.registry)
+  table.sort(names)
+  MiniPick.start {
+    source = {
+      name = 'Pickers',
+      items = names,
+      choose = function(name)
+        vim.schedule(MiniPick.registry[name])
+      end,
+    },
+  }
+end, { desc = '[S]earch [S]elect picker' })
+vim.keymap.set('n', '<leader>sw', function()
+  pick.grep { pattern = vim.fn.expand '<cword>' }
+end, { desc = '[S]earch current [W]ord' })
+vim.keymap.set('n', '<leader>sg', pick.grep_live, { desc = '[S]earch by [G]rep' })
+vim.keymap.set('n', '<leader>sd', extra.diagnostic, { desc = '[S]earch [D]iagnostics' })
+vim.keymap.set('n', '<leader>sr', pick.resume, { desc = '[S]earch [R]esume' })
+vim.keymap.set('n', '<leader>s.', extra.oldfiles, { desc = '[S]earch Recent Files ("." for repeat)' })
+vim.keymap.set('n', '<leader><leader>', pick.buffers, { desc = '[ ] Find existing buffers' })
+vim.keymap.set('n', '<leader>/', function()
+  extra.buf_lines { scope = 'current' }
+end, { desc = '[/] Fuzzily search in current buffer' })
+vim.keymap.set('n', '<leader>s/', function()
+  extra.buf_lines { scope = 'all' }
+end, { desc = '[S]earch [/] in Open Files' })
 vim.keymap.set('n', '<leader>sn', function()
-  picker.files { cwd = vim.fn.stdpath 'config' }
+  pick.files(nil, { source = { cwd = vim.fn.stdpath 'config' } })
 end, { desc = '[S]earch [N]eovim files' })
 
 -- [[ Autocompletion ]]
