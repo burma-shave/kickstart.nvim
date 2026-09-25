@@ -262,7 +262,7 @@ require('blink.cmp').setup {
 
   completion = {
     -- Press <c-space> to show documentation
-    documentation = { auto_show = false, auto_show_delay_ms = 500 },
+    documentation = { auto_show = false },
   },
 
   sources = {
