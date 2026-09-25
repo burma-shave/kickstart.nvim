@@ -3,7 +3,6 @@
 --
 -- See the kickstart.nvim README for more information
 return {
-  { 'fenetikm/falcon' },
   {
     'MeanderingProgrammer/render-markdown.nvim',
     -- Uses the markdown treesitter parsers bundled with Neovim.
