@@ -1,8 +1,7 @@
 -- Merged on top of the `lsp/jdtls.lua` configs shipped by nvim-lspconfig and
 -- nvim-jdtls (the latter adds nvim-jdtls' extendedClientCapabilities).
--- Enabled from the nvim-jdtls spec in lua/custom/plugins/init.lua.
+-- Installed by Mason and enabled by mason-lspconfig (see init.lua).
 -- See `:help lsp-config-merge`.
-local jdtls_home = '/opt/jdtls'
 local cache_dir = vim.fn.stdpath 'cache' .. '/jdtls'
 
 ---@type vim.lsp.Config
@@ -17,7 +16,7 @@ return {
     local workspace_dir = cache_dir .. '/workspace/' .. vim.fn.fnamemodify(root, ':t') .. '-' .. vim.fn.sha256(root):sub(1, 8)
 
     return vim.lsp.rpc.start({
-      jdtls_home .. '/bin/jdtls',
+      'jdtls', -- Installed by Mason, which puts it on $PATH
       '-configuration',
       cache_dir .. '/config',
       '-data',

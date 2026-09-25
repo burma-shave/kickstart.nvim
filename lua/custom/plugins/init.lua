@@ -18,13 +18,10 @@ return {
     opts = {},
   },
   {
-    -- Server config lives in after/lsp/jdtls.lua. Not lazy-loaded: the plugin's
-    -- lsp/jdtls.lua and LspAttach hook must be on the runtimepath before the
-    -- first Java buffer triggers vim.lsp.enable's FileType handler.
+    -- Server config lives in after/lsp/jdtls.lua; mason-lspconfig enables it.
+    -- Not lazy-loaded: the plugin's lsp/jdtls.lua and LspAttach hook must be
+    -- on the runtimepath before the first Java buffer starts the server.
     'mfussenegger/nvim-jdtls',
     lazy = false,
-    config = function()
-      vim.lsp.enable 'jdtls'
-    end,
   },
 }
