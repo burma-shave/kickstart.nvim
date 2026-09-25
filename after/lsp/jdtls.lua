@@ -39,12 +39,9 @@ return {
     vim.lsp.inlay_hint.enable(true, { bufnr = bufnr })
   end,
 
-  -- Here you can configure eclipse.jdt.ls specific settings
   -- See https://github.com/eclipse/eclipse.jdt.ls/wiki/Running-the-JAVA-LS-server-from-the-command-line#initialize-request
-  -- for a list of options
   settings = {
     java = {
-      -- Needs inlay hints enabled: vim.lsp.inlay_hint.enable()
       inlayHints = { parameterNames = { enabled = 'all' } },
       signatureHelp = { enabled = true },
       -- Decompile library classes that have no source jar.
@@ -62,13 +59,5 @@ return {
       },
       -- format = { settings = { url = '/path/to/eclipse-formatter.xml', profile = 'GoogleStyle' } },
     },
-  },
-
-  -- Language server `initializationOptions`
-  -- You need to extend the `bundles` with paths to jar files
-  -- if you want to use additional eclipse.jdt.ls plugins.
-  -- See https://codeberg.org/mfussenegger/nvim-jdtls#java-debug-installation
-  init_options = {
-    bundles = {},
   },
 }
