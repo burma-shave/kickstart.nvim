@@ -114,9 +114,6 @@ vim.o.relativenumber = true
 -- Enable mouse mode, can be useful for resizing splits for example!
 vim.o.mouse = 'a'
 
--- Don't show the mode, since it's already in the status line
-vim.o.showmode = false
-
 -- Sync clipboard between OS and Neovim.
 --  Schedule the setting after `UiEnter` because it can increase startup-time.
 --  Remove this option if you want your OS clipboard to remain independent.
@@ -386,9 +383,6 @@ require('lazy').setup({
       -- Enables every language server installed through Mason.
       { 'mason-org/mason-lspconfig.nvim', opts = {} },
       'WhoIsSethDaniel/mason-tool-installer.nvim',
-
-      -- Useful status updates for LSP.
-      { 'j-hui/fidget.nvim', opts = {} },
     },
     config = function()
       -- Brief aside: **What is LSP?**
@@ -423,6 +417,23 @@ require('lazy').setup({
           vim.keymap.set('n', '<leader>th', function()
             vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled { bufnr = event.buf }, { bufnr = event.buf })
           end, { buffer = event.buf, desc = 'LSP: [T]oggle Inlay [H]ints' })
+        end,
+      })
+
+      -- Report LSP progress (e.g. jdtls indexing) as progress messages, which
+      -- the default statusline shows. See `:help LspProgress`.
+      vim.api.nvim_create_autocmd('LspProgress', {
+        group = vim.api.nvim_create_augroup('lsp-progress', { clear = true }),
+        callback = function(ev)
+          local value = ev.data.params.value
+          vim.api.nvim_echo({ { value.message or 'done' } }, false, {
+            id = 'lsp.' .. ev.data.params.token,
+            kind = 'progress',
+            source = 'vim.lsp',
+            title = value.title,
+            status = value.kind ~= 'end' and 'running' or 'success',
+            percent = value.percentage,
+          })
         end,
       })
 
@@ -544,22 +555,7 @@ require('lazy').setup({
       -- - sr)'  - [S]urround [R]eplace [)] [']
       require('mini.surround').setup()
 
-      -- Simple and easy statusline.
-      --  You could remove this setup call if you don't like it,
-      --  and try some other statusline plugin
-      local statusline = require 'mini.statusline'
-      -- set use_icons to true if you have a Nerd Font
-      statusline.setup { use_icons = vim.g.have_nerd_font }
-
-      -- You can configure sections in the statusline by overriding their
-      -- default behavior. For example, here we set the section for
-      -- cursor location to LINE:COLUMN
-      ---@diagnostic disable-next-line: duplicate-set-field
-      statusline.section_location = function()
-        return '%2l:%-2v'
-      end
-
-      -- File type icons, used by the statusline, mini.files, snacks and render-markdown.
+      -- File type icons, used by mini.files, snacks and render-markdown.
       if vim.g.have_nerd_font then
         require('mini.icons').setup()
       end
