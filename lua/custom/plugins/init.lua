@@ -5,9 +5,6 @@
 return {
   { 'fenetikm/falcon' },
   {
-    'sindrets/diffview.nvim',
-  },
-  {
     'MeanderingProgrammer/render-markdown.nvim',
     -- Uses the markdown treesitter parsers bundled with Neovim.
     dependencies = { 'nvim-mini/mini.nvim' },

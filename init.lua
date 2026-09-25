@@ -593,10 +593,8 @@ require('lazy').setup({
       end
 
       -- File type icons, used by the statusline, mini.files, snacks and render-markdown.
-      -- The mock serves plugins that ask for nvim-web-devicons (e.g. diffview).
       if vim.g.have_nerd_font then
         require('mini.icons').setup()
-        MiniIcons.mock_nvim_web_devicons()
       end
 
       require('mini.files').setup {}
