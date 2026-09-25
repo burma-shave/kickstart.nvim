@@ -266,7 +266,7 @@ require('blink.cmp').setup {
   },
 
   sources = {
-    default = { 'lsp', 'path', 'snippets' },
+    default = { 'lsp', 'path' },
   },
 
   -- Lua matcher, so no prebuilt Rust binary is needed. See :h blink-cmp-config-fuzzy
