@@ -650,6 +650,17 @@ require('lazy').setup({
       --    function will be executed to configure the current buffer
       -- vim.api.nvim_create_autocmd('LspAttach', lspattach)
 
+      -- Kept from the disabled block above. Not gated on supports_method():
+      -- jdtls doesn't advertise inlay hints, but still serves them.
+      vim.api.nvim_create_autocmd('LspAttach', {
+        group = vim.api.nvim_create_augroup('lsp-inlay-hint-toggle', { clear = true }),
+        callback = function(event)
+          vim.keymap.set('n', '<leader>th', function()
+            vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled { bufnr = event.buf }, { bufnr = event.buf })
+          end, { buffer = event.buf, desc = 'LSP: [T]oggle Inlay [H]ints' })
+        end,
+      })
+
       -- Diagnostic Config
       -- See :help vim.diagnostic.Opts
       vim.diagnostic.config {

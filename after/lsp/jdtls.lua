@@ -35,11 +35,34 @@ return {
 
   root_markers = { '.git', 'mvnw', 'gradlew' },
 
+  ---@param bufnr integer
+  on_attach = function(_, bufnr)
+    vim.lsp.inlay_hint.enable(true, { bufnr = bufnr })
+  end,
+
   -- Here you can configure eclipse.jdt.ls specific settings
   -- See https://github.com/eclipse/eclipse.jdt.ls/wiki/Running-the-JAVA-LS-server-from-the-command-line#initialize-request
   -- for a list of options
   settings = {
-    java = {},
+    java = {
+      -- Needs inlay hints enabled: vim.lsp.inlay_hint.enable()
+      inlayHints = { parameterNames = { enabled = 'all' } },
+      signatureHelp = { enabled = true },
+      -- Decompile library classes that have no source jar.
+      contentProvider = { preferred = 'fernflower' },
+      -- Never collapse imports into wildcards.
+      sources = { organizeImports = { starThreshold = 9999, staticStarThreshold = 9999 } },
+      -- Offer static members from these classes in completion, adding the static import.
+      completion = {
+        favoriteStaticMembers = {
+          'org.junit.jupiter.api.Assertions.*',
+          'org.mockito.Mockito.*',
+          'org.mockito.ArgumentMatchers.*',
+          'org.assertj.core.api.Assertions.*',
+        },
+      },
+      -- format = { settings = { url = '/path/to/eclipse-formatter.xml', profile = 'GoogleStyle' } },
+    },
   },
 
   -- Language server `initializationOptions`
