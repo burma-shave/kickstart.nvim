@@ -10,9 +10,9 @@ vim.g.have_nerd_font = true
 
 -- [[ Setting options ]]
 -- See `:help option-list`
-vim.o.tabstop = 4 -- set tabs witdth to 4 spaces
+vim.o.tabstop = 4 -- set tab width to 4 spaces
 vim.o.shiftwidth = 0 -- use tabstop value for indents
-vim.o.expandtab = false -- do not inset spaces in place of tabs
+vim.o.expandtab = false -- do not insert spaces in place of tabs
 
 -- Softwrap on whole words
 vim.o.linebreak = true
@@ -83,11 +83,11 @@ vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')
 -- Diagnostic keymaps
 vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostic [Q]uickfix list' })
 
--- Allow easy window navigation out of a teminal buffer
-vim.keymap.set('t', '<C-w>', '<C-\\><C-n><C-w>', { desc = 'Exit terminal mode' })
+-- Allow easy window navigation out of a terminal buffer
+vim.keymap.set('t', '<C-w>', '<C-\\><C-n><C-w>', { desc = 'Window command from terminal mode' })
 
 vim.api.nvim_create_autocmd('BufEnter', {
-  desc = 'Enter inset mode when entering a terminal buffer',
+  desc = 'Enter insert mode when entering a terminal buffer',
   group = vim.api.nvim_create_augroup('terminal-auto-insert', {}),
 
   callback = function()
@@ -109,7 +109,7 @@ vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper win
 -- Highlight when yanking (copying) text
 vim.api.nvim_create_autocmd('TextYankPost', {
   desc = 'Highlight when yanking (copying) text',
-  group = vim.api.nvim_create_augroup('kickstart-highlight-yank', { clear = true }),
+  group = vim.api.nvim_create_augroup('highlight-yank', { clear = true }),
   callback = function()
     vim.hl.on_yank()
   end,
