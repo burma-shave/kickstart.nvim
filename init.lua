@@ -289,6 +289,25 @@ require('mason-tool-installer').setup {
   ensure_installed = { 'jdtls' },
 }
 
+-- LSP keymaps. Apart from grd, these are Neovim's defaults (`:help lsp-defaults`),
+-- redefined only to give them readable descriptions instead of function names.
+for _, m in ipairs {
+  { 'n', 'grn', vim.lsp.buf.rename, '[R]e[n]ame' },
+  { { 'n', 'x' }, 'gra', vim.lsp.buf.code_action, 'Code [A]ction' },
+  { 'n', 'grd', vim.lsp.buf.definition, 'Goto [D]efinition' },
+  { 'n', 'grr', vim.lsp.buf.references, 'Goto [R]eferences' },
+  { 'n', 'gri', vim.lsp.buf.implementation, 'Goto [I]mplementation' },
+  { 'n', 'grt', vim.lsp.buf.type_definition, 'Goto [T]ype definition' },
+  { 'n', 'grx', vim.lsp.codelens.run, 'Run code lens' },
+  { 'n', 'gO', vim.lsp.buf.document_symbol, 'Document symbols' },
+  { { 'i', 's' }, '<C-s>', vim.lsp.buf.signature_help, 'Signature help' },
+} do
+  local mode, lhs, fn, desc = unpack(m)
+  vim.keymap.set(mode, lhs, function()
+    fn()
+  end, { desc = 'LSP: ' .. desc })
+end
+
 -- Toggle inlay hints. Not gated on supports_method(): jdtls doesn't
 -- advertise inlay hints, but still serves them.
 vim.api.nvim_create_autocmd('LspAttach', {
