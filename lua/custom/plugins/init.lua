@@ -18,9 +18,13 @@ return {
     opts = {},
   },
   {
-    -- Setup lives in ftplugin/java.lua, which Neovim runs automatically
-    -- for every buffer whose filetype becomes `java`.
+    -- Server config lives in after/lsp/jdtls.lua. Not lazy-loaded: the plugin's
+    -- lsp/jdtls.lua and LspAttach hook must be on the runtimepath before the
+    -- first Java buffer triggers vim.lsp.enable's FileType handler.
     'mfussenegger/nvim-jdtls',
-    ft = 'java',
+    lazy = false,
+    config = function()
+      vim.lsp.enable 'jdtls'
+    end,
   },
 }
